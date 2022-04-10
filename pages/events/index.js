@@ -1,12 +1,13 @@
-// import Head from 'next/head'
-// import Image from 'next/image'
-// import styles from '../styles/Home.module.scss'
+import EventList from '../../components/events/eventList'
+
+import { getAllEvents } from '../../dummy-data'
 
 export default function EventsPage() {
-    return (
-      <div>
-        <h1>The Events Page</h1>
-      </div>
-    )
-  }
-  
+  const events = getAllEvents()
+
+  return (
+    <div>
+      <EventList events={events} />
+    </div>
+  )
+}
