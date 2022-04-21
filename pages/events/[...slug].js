@@ -1,30 +1,16 @@
 import { Fragment } from 'react'
-import { useRouter } from 'next/router'
 
 import Button from '../../components/common/button'
 import ErrorAlert from '../../components/errorAlert/errorAlert'
 import EventList from '../../components/events/eventList'
 import ResultsTitle from '../../components/resultsTitle/resultsTitle'
 
-import { getFilteredEvents } from '../../dummy-data'
+import { getFilteredEvents } from '../../helpers/apiUtil'
 
-export default function FitleredEventsPage() {
-  const { query: { slug: filterData } } = useRouter()
+export default function FitleredEventsPage(props) {
+  const { filteredEvents, hasError, numMonth, numYear } = props
 
-  if (!filterData) {
-    return (<p className='center'>Loading...</p>)
-  }
-
-  const [ year, month ] = filterData
-
-  if (
-    isNaN(year) ||
-    isNaN(month) ||
-    +year > 2030 ||
-    +year < 2021 ||
-    +month < 1 ||
-    +month > 12
-  ) {
+  if (hasError) {
     return (
       <Fragment>
         <ErrorAlert>
@@ -36,8 +22,6 @@ export default function FitleredEventsPage() {
       </Fragment>
     )
   }
-
-  const filteredEvents = getFilteredEvents({ year: +year, month: +month })
 
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
@@ -54,8 +38,36 @@ export default function FitleredEventsPage() {
 
   return (
     <Fragment>
-      <ResultsTitle date={new Date(+year, +month - 1)} />
+      <ResultsTitle date={new Date(numYear, numMonth - 1)} />
       <EventList events={filteredEvents} />
     </Fragment>
   )
+}
+
+export async function getServerSideProps(context) {
+  const { params } = context
+
+  const { slug: filterData } = params
+  const [ year, month ] = filterData
+  const numYear = +year
+  const numMonth = +month
+
+  if (
+    isNaN(year) ||
+    isNaN(month) ||
+    numYear > 2030 ||
+    numYear < 2021 ||
+    numMonth < 1 ||
+    numMonth > 12
+  ) {
+    return {
+      props: { hasError: true }
+    }
+  }
+
+  const filteredEvents = await getFilteredEvents({ year: numYear, month: numMonth })
+
+  return {
+    props: { filteredEvents, numMonth, numYear }
+  }
 }
