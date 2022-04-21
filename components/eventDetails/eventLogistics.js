@@ -13,7 +13,7 @@ export default function EventLogistics(props) {
     month: 'long',
     year: 'numeric',
   });
-  const addressText = address.replace(', ', '\n');
+  const addressText = address?.replace(', ', '\n');
 
   return (
     <section className={classes.logistics}>
