@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import Head from 'next/head'
 
 import Button from '../../components/common/button'
 import ErrorAlert from '../../components/errorAlert/errorAlert'
@@ -10,9 +11,20 @@ import { getFilteredEvents } from '../../helpers/apiUtil'
 export default function FitleredEventsPage(props) {
   const { filteredEvents, hasError, numMonth, numYear } = props
 
+  const pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta
+        name='description'
+        content={`All events for ${numMonth}/${numYear}`}
+      />
+    </Head>
+  )
+
   if (hasError) {
     return (
       <Fragment>
+        {pageHeadData}
         <ErrorAlert>
           <p>Invalid filter. Please adjust your values!</p>
         </ErrorAlert>
@@ -26,6 +38,7 @@ export default function FitleredEventsPage(props) {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <Fragment>
+        {pageHeadData}
         <ErrorAlert>
           <p>No events found</p>
         </ErrorAlert>
@@ -38,6 +51,7 @@ export default function FitleredEventsPage(props) {
 
   return (
     <Fragment>
+      {pageHeadData}
       <ResultsTitle date={new Date(numYear, numMonth - 1)} />
       <EventList events={filteredEvents} />
     </Fragment>
