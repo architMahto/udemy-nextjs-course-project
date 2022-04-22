@@ -9,13 +9,15 @@ export default async function handler(req, res) {
       return
     }
 
+    try {
+      const client = await connectDatabase()
+      await insertDocument(client, 'newsletters', { email: userEmail })
 
-    const client = await connectDatabase()
-
-    await insertDocument(client, 'newsletters', { email: userEmail })
-
-    client.close()
-
+      client.close()
+    } catch (err) {
+      res.status(500).json({ message: 'Failure in registering for newsletter' })
+      return
+    }
 
     res.status(201).json({ message: 'Successfully registered for newsletter' })
   }
