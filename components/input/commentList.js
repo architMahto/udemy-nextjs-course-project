@@ -6,7 +6,7 @@ export default function CommentList(props) {
   return (
     <ul className={classes.comments}>
       {comments.map(comment => (
-        <li key={comment.id}>
+        <li key={comment._id}>
           {' '}
           <p>{comment.text}</p>
           <div>

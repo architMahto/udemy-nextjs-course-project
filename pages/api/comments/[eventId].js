@@ -1,4 +1,8 @@
-export default function handler(req, res) {
+import { connectDatabase, insertDocument, getAllDocuments } from '../../../helpers/dbUtil'
+
+export default async function handler(req, res) {
+  const client = await connectDatabase()
+
   if (req.method === 'POST') {
     const { eventId } = req.query
     const { email, name, text } = req.body
@@ -15,20 +19,23 @@ export default function handler(req, res) {
     }
 
     const newComment = {
-      id: new Date().toISOString(),
       email,
       name,
-      text
+      text,
+      eventId
     }
+
+    const result = await insertDocument(client, 'comments', newComment)
+    newComment.id = result.id
 
     res.status(201).json({ message: 'Successfully posted a comment ', comment: newComment })
   }
 
   if (req.method === 'GET') {
-    const commentList = [
-      { id: 'c1', name: 'Max', text: 'A first comment!' },
-      { id: 'c2', name: 'Manuel', text: 'A second comment!' },
-    ]
-    res.status(200).json({ message: 'Successfully retrieved comments ', comments: commentList })
+    const result = await getAllDocuments(client, 'comments', { _id: -1 }, { eventId })
+
+    res.status(200).json({ message: 'Successfully retrieved comments ', comments: result })
   }
+
+  client.close()
 }
