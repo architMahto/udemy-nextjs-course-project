@@ -1,20 +1,19 @@
 import classes from './commentList.module.scss'
 
-export default function CommentList() {
+export default function CommentList(props) {
+  const { comments } = props
+
   return (
     <ul className={classes.comments}>
-      <li>
-        <p>My comment is amazing!</p>
-        <div>
-          By <address>Maximilian</address>
-        </div>
-      </li>
-      <li>
-        <p>My comment is amazing!</p>
-        <div>
-          By <address>Maximilian</address>
-        </div>
-      </li>
+      {comments.map(comment => (
+        <li key={comment.id}>
+          {' '}
+          <p>{comment.text}</p>
+          <div>
+            By <address>{comment.name}</address>
+          </div>
+        </li>
+      ))}
     </ul>
   )
 }
