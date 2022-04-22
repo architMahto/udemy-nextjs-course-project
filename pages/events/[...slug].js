@@ -2,9 +2,9 @@ import { Fragment } from 'react'
 import Head from 'next/head'
 
 import Button from '../../components/common/button'
-import ErrorAlert from '../../components/errorAlert/errorAlert'
+import ErrorAlert from '../../components/common/errorAlert'
 import EventList from '../../components/events/eventList'
-import ResultsTitle from '../../components/resultsTitle/resultsTitle'
+import ResultsTitle from '../../components/events/resultsTitle'
 
 import { getFilteredEvents } from '../../helpers/apiUtil'
 

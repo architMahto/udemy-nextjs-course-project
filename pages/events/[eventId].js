@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import Head from 'next/head'
 
-import ErrorAlert from '../../components/errorAlert/errorAlert'
+import ErrorAlert from '../../components/common/errorAlert'
 import EventContent from '../../components/eventDetails/eventContent'
 import EventLogistics from '../../components/eventDetails/eventLogistics'
 import EventSummary from '../../components/eventDetails/eventSummary'
