@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 import CommentList from './commentList'
 import NewComment from './newComment'
+
+import NotificationContext from '../../contexts/notificationContext'
 
 import classes from './comments.module.scss'
 
 export default function Comments(props) {
   const { eventId } = props
 
+  const { showNotification } = useContext(NotificationContext)
   const [ showComments, setShowComments ] = useState(false)
   const [ comments, setComments ] = useState([])
 
@@ -33,8 +36,31 @@ export default function Comments(props) {
         'Content-Type': 'application/json'
       }
     })
-      .then(response => response.json())
-      .then(data => console.log('data:', data))
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        }
+
+        respsonse.json().then(data => {
+          throw new Error(data.message || 'Something went wrong!')
+        })
+      })
+      .then(() => {
+        showNotification({
+          title: 'Success!',
+          message: 'Successfully entered comment!',
+          status: 'success'
+        })
+      })
+      .catch(error => {
+        const { message } = error
+
+        showNotification({
+          title: 'Error!',
+          message: message || 'Something went wrong!',
+          status: 'error'
+        })
+      })
   }
 
   if (!comments) {

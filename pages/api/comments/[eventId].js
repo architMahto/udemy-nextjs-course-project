@@ -1,6 +1,8 @@
 import { connectDatabase, insertDocument, getAllDocuments } from '../../../helpers/dbUtil'
 
 export default async function handler(req, res) {
+  const { eventId } = req.query
+
   let client
   try {
     client = await connectDatabase()
@@ -10,7 +12,6 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    const { eventId } = req.query
     const { email, name, text } = req.body
 
     if (
